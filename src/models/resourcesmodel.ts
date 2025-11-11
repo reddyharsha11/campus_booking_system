@@ -5,6 +5,7 @@ export interface  Iresource extends Document{
     type:string,
     location:string,
     capacity:string,
+    status:string,
 
 }
 
@@ -12,8 +13,9 @@ const resourceSchema = new Schema<Iresource>({
     roomname:{type:String, required: true},
     type:{type:String, required: true},
     location:{type:String, required: true},
-    capacity:{type:String, required: true}
-})
+    capacity:{type:String, required: true},
+    status:{type:String, default:"available"}
+    })
 
 const roomsresourceDataModel= mongoose.model<Iresource>("RoomsResourceData", resourceSchema);
 

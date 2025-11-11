@@ -108,4 +108,6 @@ const getAllBookings = async (request: Request, response: Response) => {
     }
 }
 
+
+
 export { cancelById, createBooking, userBookings, getAllBookings};

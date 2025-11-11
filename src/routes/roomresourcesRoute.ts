@@ -1,10 +1,12 @@
 import { Router } from "express";
 import {admin,authorization} from "../middlewares/auth.js";
-import { getAllResources, getOneResource, deleteResource , postResource , updateResource, searchResources} from "../controllers/roomresourcesData.js";
+import { getAllResources, getOneResource, deleteResource , postResource , updateResource, searchQuery, filterQuery} from "../controllers/roomresourcesData.js";
 
 const  resources = Router();
 
-resources.get("/api/resources/sea", searchResources);
+resources.get("/api/resources/search", searchQuery);
+
+resources.get("/api/resources/filter", filterQuery);
 
 resources.get("/api/resources", getAllResources);
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-
+import roomsBookingDataModel from "../models/bookingsModel.js";
 import roomsresourceDataModel from "../models/resourcesmodel.js";
 
 const getAllResources = async(request:Request, response:Response)=>{
@@ -50,7 +50,7 @@ const deleteResource = async (request:Request, response:Response)=>{
 }
 
 const postResource = async (request:Request, response:Response)=>{
-    const{roomname,type,location,capacity}=request.body
+    const{roomname,type,location,capacity,status}=request.body
 
     try{
         const checkroom = await roomsresourceDataModel.findOne({roomname});
@@ -63,7 +63,8 @@ const postResource = async (request:Request, response:Response)=>{
                 roomname,
                 type,
                 location,
-                capacity
+                capacity,
+                status
             });
             await newRoom.save();
             return response.status(200).json({message:"Room Added Successfully"});
@@ -76,10 +77,10 @@ const postResource = async (request:Request, response:Response)=>{
 
 const updateResource = async (request:Request, response:Response)=>{
     const {id} = request.params;
-    const {roomname, type, location, capacity} = request.body;
+    const {roomname, type, location, capacity, status} = request.body;
 
     try{
-        const checkroom= await roomsresourceDataModel.findByIdAndUpdate(id, {roomname, type, location, capacity}, {new:true});
+        const checkroom= await roomsresourceDataModel.findByIdAndUpdate(id, {roomname, type, location, capacity, status}, {new:true});
 
         if(!checkroom){
             return response.status(404).json({message:"Room Not Found"});
@@ -94,13 +95,11 @@ const updateResource = async (request:Request, response:Response)=>{
 
 }
 
-const searchResources = async (request: Request, response: Response) => {
+const searchQuery = async (request: Request, response: Response) => {
   try {
     const { search } = request.query;
 
     console.log('Search query:', search);
-
-
 
     const resources = await roomsresourceDataModel.find({
       
@@ -113,10 +112,32 @@ const searchResources = async (request: Request, response: Response) => {
     });
 
     return response.status(200).json(resources);
-  } catch (error) {
+  }
+   catch (error) {
     console.error('Error searching resources:', error);
     return response.status(500).json({ message: 'Server error' });
   }
 };
 
-export {getAllResources, getOneResource, deleteResource, postResource, updateResource,searchResources};
+const filterQuery = async (request: Request, response: Response) => {
+  try {
+    const  { type } = request.query;
+
+    console.log('Filter query:', type);
+
+    const bookings = await roomsresourceDataModel.find({
+      
+      $or: [
+        { type: { $regex: type, $options: 'i' } }
+      ]
+    });
+
+    return response.status(200).json(bookings);
+  }
+   catch (error) {
+    console.error('Error searching resources:', error);
+    return response.status(500).json({ message: 'Server error' });
+  }
+};
+
+export {getAllResources, getOneResource, deleteResource, postResource, updateResource, searchQuery, filterQuery};
