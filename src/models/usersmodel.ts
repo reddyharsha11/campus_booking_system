@@ -5,8 +5,7 @@ export interface  Iuser extends Document{
     username:string,
     email:string,
     password:string,
-    author_id:string,
-    role:'Student' | 'Faculty' | 'Admin'
+    role:'Student' | 'Faculty' | 'Admin',
 }
 
 const userSchema = new Schema<Iuser>({
