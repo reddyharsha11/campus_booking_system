@@ -71,5 +71,3 @@ const login = async (request: Request, response: Response) => {
 
 
 export { registration, login }
-
-// LOGIN&REGISTRATION
